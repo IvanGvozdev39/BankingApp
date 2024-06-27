@@ -1,4 +1,4 @@
-package com.test.bankingapp.account.presentation.items
+package com.test.bankingapp.account.presentation.util
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
