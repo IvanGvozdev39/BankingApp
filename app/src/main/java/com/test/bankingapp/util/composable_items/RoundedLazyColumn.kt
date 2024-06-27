@@ -16,7 +16,6 @@ import androidx.navigation.NavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.util.TransactionItem
-import com.test.bankingapp.navigation.presentation.Screen
 
 @Composable
 fun RoundedLazyColumn(navController: NavController, transactions: List<Transaction>) {
