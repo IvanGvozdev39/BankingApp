@@ -20,16 +20,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Account
 import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.util.AccountItem
 import com.test.bankingapp.account.presentation.util.TransactionItem
+import com.test.bankingapp.navigation.presentation.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
+fun AccountScreen(navController: NavController, accounts: List<Account>, transactions: List<Transaction>) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedAccount by remember { mutableStateOf<Account?>(null) }
@@ -63,7 +66,9 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
             scaffoldState = scaffoldState,
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Screen.TransactionScreen.route)
+                    },
                     backgroundColor = colorResource(id = R.color.blue),
                     contentColor = colorResource(id = R.color.white)
                 ) {
@@ -129,7 +134,7 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
 
                 LazyColumn {
                     items(transactions) { transaction ->
-                        TransactionItem(transaction)
+                        TransactionItem(transaction = transaction, navController = navController)
                     }
                 }
             }
@@ -228,5 +233,5 @@ fun AccountScreenPreview() {
             "$10.09"
         )
     )
-    AccountScreen(accounts = accounts, transactions = transactions)
+    AccountScreen(navController = rememberNavController(), accounts = accounts, transactions = transactions) //todo: remove later
 }

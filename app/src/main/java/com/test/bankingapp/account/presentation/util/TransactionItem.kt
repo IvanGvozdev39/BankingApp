@@ -2,6 +2,7 @@ package com.test.bankingapp.account.presentation.util
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,11 +17,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Transaction
+import com.test.bankingapp.navigation.presentation.Screen
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +32,8 @@ fun TransactionItem(transaction: Transaction) {
                 color = colorResource(id = R.color.dark_gray),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { navController.navigate(Screen.TransactionScreen.route) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {

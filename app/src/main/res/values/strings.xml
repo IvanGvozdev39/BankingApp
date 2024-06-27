@@ -7,6 +7,13 @@
     <string name="declined">Declined</string>
     <string name="in_progress">In progress</string>
     <string name="select_account">Select the account</string>
+    <string name="transaction">Transaction</string>
+    <string name="okay">Okay</string>
+    <string name="transaction_was_applied_in">Transaction was applied in</string>
+    <string name="transaction_number">Transaction number</string>
+    <string name="date">Date</string>
+    <string name="transaction_status">Transaction Status</string>
+    <string name="amount">Amount</string>
 
     
     <!-- Content description -->
