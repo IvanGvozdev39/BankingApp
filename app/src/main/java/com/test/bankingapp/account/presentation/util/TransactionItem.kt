@@ -2,6 +2,7 @@ package com.test.bankingapp.account.presentation.util
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,20 +17,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Transaction
+import com.test.bankingapp.navigation.presentation.Screen
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .background(
                 color = colorResource(id = R.color.dark_gray),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(16.dp)
             )
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { navController.navigate(Screen.TransactionScreen.route) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -37,11 +40,11 @@ fun TransactionItem(transaction: Transaction) {
             Text(text = transaction.date, color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
             TransactionStatus(transaction.status)
         }
-        Text(text = transaction.amount, color = colorResource(id = R.color.white), fontSize = 16.sp)
+        Text(text = transaction.amount, color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
         Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(
             id = R.string.arrow_right
         ),
-            modifier = Modifier.align(alignment = Alignment.CenterVertically))
+            modifier = Modifier.align(alignment = Alignment.Top))
     }
 }
 

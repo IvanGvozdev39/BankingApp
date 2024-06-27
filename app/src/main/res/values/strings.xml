@@ -7,10 +7,25 @@
     <string name="declined">Declined</string>
     <string name="in_progress">In progress</string>
     <string name="select_account">Select the account</string>
+    <string name="transaction">Transaction</string>
+    <string name="okay">Okay</string>
+    <string name="transaction_was_applied_in">Transaction was applied in</string>
+    <string name="transaction_number">Transaction number</string>
+    <string name="date">Date</string>
+    <string name="transaction_status">Transaction Status</string>
+    <string name="amount">Amount</string>
+    <string name="all_transactions">All transactions</string>
+    <string name="filter_by_date">Filter by date</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="submit">Submit</string>
 
     
     <!-- Content description -->
     <string name="add">Add</string>
     <string name="account_image">account_image</string>
     <string name="arrow_right">arrow_right</string>
+    <string name="previous_month">previous_month</string>
+    <string name="next_month">next_month</string>
+    <string name="go_back">go_back</string>
 </resources>

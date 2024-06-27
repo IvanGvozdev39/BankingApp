@@ -3,15 +3,40 @@ package com.test.bankingapp.account.presentation.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -20,16 +45,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Account
 import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.util.AccountItem
-import com.test.bankingapp.account.presentation.util.TransactionItem
+import com.test.bankingapp.navigation.presentation.Screen
+import com.test.bankingapp.util.composable_items.RoundedLazyColumn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
+fun AccountScreen(
+    navController: NavController,
+    accounts: List<Account>,
+    transactions: List<Transaction>
+) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedAccount by remember { mutableStateOf<Account?>(null) }
@@ -63,7 +95,9 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
             scaffoldState = scaffoldState,
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Screen.TransactionScreen.route)
+                    },
                     backgroundColor = colorResource(id = R.color.blue),
                     contentColor = colorResource(id = R.color.white)
                 ) {
@@ -90,7 +124,7 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AccountItem(accounts[0]) {   //todo: change to actual account selection
+                AccountItem(accounts[0]) {   //todo: change to actual selected account
                     coroutineScope.launch {
                         bottomSheetState.show()
                         isSheetVisible = true
@@ -115,7 +149,9 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
                             .weight(1f)
                             .fillMaxWidth()
                     )
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = {
+                        navController.navigate(Screen.AllTransactionsScreen.route)
+                    }) {
                         Text(
                             text = stringResource(id = R.string.view_all),
                             color = colorResource(id = R.color.blue),
@@ -127,11 +163,7 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn {
-                    items(transactions) { transaction ->
-                        TransactionItem(transaction)
-                    }
-                }
+                RoundedLazyColumn(navController = navController, transactions = transactions)
             }
         }
     }
@@ -150,12 +182,20 @@ fun BottomSheetContent(
             .background(colorResource(id = R.color.black))
             .padding(16.dp)
     ) {
+        Divider(
+            thickness = 6.dp, color = colorResource(id = R.color.dark_gray),
+            modifier = Modifier
+                .width(45.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.select_account),
             color = colorResource(id = R.color.white),
-            fontSize = 24.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)
         )
 
         LazyColumn {
@@ -228,5 +268,9 @@ fun AccountScreenPreview() {
             "$10.09"
         )
     )
-    AccountScreen(accounts = accounts, transactions = transactions)
+    AccountScreen(
+        navController = rememberNavController(),
+        accounts = accounts,
+        transactions = transactions
+    ) //todo: remove later
 }
