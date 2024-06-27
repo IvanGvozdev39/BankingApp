@@ -11,7 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -28,11 +30,16 @@ import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.util.AccountItem
 import com.test.bankingapp.account.presentation.util.TransactionItem
 import com.test.bankingapp.navigation.presentation.Screen
+import com.test.bankingapp.util.composable_items.RoundedLazyColumn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AccountScreen(navController: NavController, accounts: List<Account>, transactions: List<Transaction>) {
+fun AccountScreen(
+    navController: NavController,
+    accounts: List<Account>,
+    transactions: List<Transaction>
+) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedAccount by remember { mutableStateOf<Account?>(null) }
@@ -95,7 +102,7 @@ fun AccountScreen(navController: NavController, accounts: List<Account>, transac
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AccountItem(accounts[0]) {   //todo: change to actual account selection
+                AccountItem(accounts[0]) {   //todo: change to actual selected account
                     coroutineScope.launch {
                         bottomSheetState.show()
                         isSheetVisible = true
@@ -120,7 +127,9 @@ fun AccountScreen(navController: NavController, accounts: List<Account>, transac
                             .weight(1f)
                             .fillMaxWidth()
                     )
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = {
+                        navController.navigate(Screen.AllTransactionsScreen.route)
+                    }) {
                         Text(
                             text = stringResource(id = R.string.view_all),
                             color = colorResource(id = R.color.blue),
@@ -132,11 +141,7 @@ fun AccountScreen(navController: NavController, accounts: List<Account>, transac
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn {
-                    items(transactions) { transaction ->
-                        TransactionItem(transaction = transaction, navController = navController)
-                    }
-                }
+                RoundedLazyColumn(navController = navController, transactions = transactions)
             }
         }
     }
@@ -155,12 +160,20 @@ fun BottomSheetContent(
             .background(colorResource(id = R.color.black))
             .padding(16.dp)
     ) {
+        Divider(
+            thickness = 6.dp, color = colorResource(id = R.color.dark_gray),
+            modifier = Modifier
+                .width(45.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.select_account),
             color = colorResource(id = R.color.white),
-            fontSize = 24.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)
         )
 
         LazyColumn {
@@ -233,5 +246,9 @@ fun AccountScreenPreview() {
             "$10.09"
         )
     )
-    AccountScreen(navController = rememberNavController(), accounts = accounts, transactions = transactions) //todo: remove later
+    AccountScreen(
+        navController = rememberNavController(),
+        accounts = accounts,
+        transactions = transactions
+    ) //todo: remove later
 }

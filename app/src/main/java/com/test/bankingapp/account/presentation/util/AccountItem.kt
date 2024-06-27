@@ -3,6 +3,7 @@ package com.test.bankingapp.account.presentation.util
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,52 +27,54 @@ import com.test.bankingapp.account.domain.model.Account
 
 @Composable
 fun AccountItem(account: Account, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(110.dp)
-            .padding(8.dp)
-            .background(
-                color = colorResource(id = R.color.dark_gray),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(16.dp)
-            .clickable { onClick() }
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.apple_mastercard),
-            contentDescription = stringResource(id = R.string.account_image),
+    Box(modifier = Modifier.fillMaxWidth()
+        .clickable { onClick() }) {
+        Row(
             modifier = Modifier
-                .width(52.dp)
-                .height(25.dp)
-                .padding(top = 5.dp, end = 10.dp)
-        )
-        Column {
-            Text(
-                text = account.title,
-                color = colorResource(id = R.color.white),
-                fontSize = 16.sp
+                .fillMaxWidth()
+                .height(110.dp)
+                .padding(8.dp)
+                .background(
+                    color = colorResource(id = R.color.dark_gray),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.apple_mastercard),
+                contentDescription = stringResource(id = R.string.account_image),
+                modifier = Modifier
+                    .width(52.dp)
+                    .height(25.dp)
+                    .padding(top = 5.dp, end = 10.dp)
             )
-            Text(
-                text = account.accountNumber,
-                color = colorResource(id = R.color.light_gray),
-                fontSize = 14.sp
+            Column {
+                Text(
+                    text = account.title,
+                    color = colorResource(id = R.color.white),
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = account.accountNumber,
+                    color = colorResource(id = R.color.light_gray),
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = account.debitCardNumber,
+                    color = colorResource(id = R.color.light_gray),
+                    fontSize = 14.sp
+                )
+            }
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
             )
-            Text(
-                text = account.debitCardNumber,
-                color = colorResource(id = R.color.light_gray),
-                fontSize = 14.sp
+            Image(
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = stringResource(id = R.string.arrow_right),
+                modifier = Modifier.align(alignment = Alignment.CenterVertically)
             )
         }
-        Spacer(
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
-        )
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = stringResource(id = R.string.arrow_right),
-            modifier = Modifier.align(alignment = Alignment.CenterVertically)
-        )
     }
 }

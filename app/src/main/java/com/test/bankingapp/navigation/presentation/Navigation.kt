@@ -10,6 +10,7 @@ import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Account
 import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.screens.AccountScreen
+import com.test.bankingapp.transaction.presentation.screens.AllTransactionsScreen
 import com.test.bankingapp.transaction.presentation.screens.TransactionScreen
 
 @Composable
@@ -26,12 +27,15 @@ fun Navigation(context: Context) {
             val transactions = listOf(
                 Transaction("OOO 'Company'", "26.06.2024", stringResource(id = R.string.in_progress),"$10.09"),
                 Transaction("OOO 'Enterprise'", "24.06.2024", stringResource(id = R.string.executed),"$11"),
-                Transaction("OAO 'Syndicate'", "24.06.2024", stringResource(id = R.string.executed),"$25.99")
+                Transaction("OAO 'Company'", "24.06.2024", stringResource(id = R.string.executed),"$25.99")
             )
             AccountScreen(navController = navController, accounts = accounts, transactions = transactions)
         }
         composable(route = Screen.TransactionScreen.route) {
             TransactionScreen(navController = navController)
+        }
+        composable(route = Screen.AllTransactionsScreen.route) {
+            AllTransactionsScreen(navController = navController)
         }
     }
 }

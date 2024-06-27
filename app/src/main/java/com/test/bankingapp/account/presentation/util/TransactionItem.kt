@@ -27,10 +27,9 @@ fun TransactionItem(transaction: Transaction, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .background(
                 color = colorResource(id = R.color.dark_gray),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(16.dp)
             )
             .padding(16.dp)
             .clickable { navController.navigate(Screen.TransactionScreen.route) },
@@ -41,11 +40,11 @@ fun TransactionItem(transaction: Transaction, navController: NavController) {
             Text(text = transaction.date, color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
             TransactionStatus(transaction.status)
         }
-        Text(text = transaction.amount, color = colorResource(id = R.color.white), fontSize = 16.sp)
+        Text(text = transaction.amount, color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
         Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(
             id = R.string.arrow_right
         ),
-            modifier = Modifier.align(alignment = Alignment.CenterVertically))
+            modifier = Modifier.align(alignment = Alignment.Top))
     }
 }
 

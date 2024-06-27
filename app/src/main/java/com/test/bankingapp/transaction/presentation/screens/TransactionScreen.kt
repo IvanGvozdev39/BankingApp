@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
+import com.test.bankingapp.transaction.presentation.util.CustomDatePickerDialog
+import java.time.LocalDate
 
 @Composable
 fun TransactionScreen(navController: NavController) {
@@ -34,6 +36,7 @@ fun TransactionScreen(navController: NavController) {
         stringResource(id = R.string.in_progress),
         stringResource(id = R.string.declined)
     )
+    var showCalendarDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -109,11 +112,16 @@ fun TransactionScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
-                .height(54.dp),
+                .height(54.dp)
+                .clickable {
+                    showCalendarDialog = true
+                },
+            enabled = false,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = colorResource(id = R.color.white),
-                focusedBorderColor = colorResource(id = R.color.white),
-                unfocusedBorderColor = colorResource(id = R.color.white),
+                textColor = Color.White,
+                disabledTextColor = Color.White,
+                disabledBorderColor = Color.White,
+                disabledLabelColor = Color.Gray,
                 cursorColor = colorResource(id = R.color.white)
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -123,6 +131,16 @@ fun TransactionScreen(navController: NavController) {
             shape = RoundedCornerShape(10.dp)
         )
 
+        if (showCalendarDialog) {
+            CustomDatePickerDialog(
+                selectedDate = LocalDate.now(),
+                onDateSelected = {
+                    date = it.toString()
+                    showCalendarDialog = false
+                }
+            )
+        }
+
         var expanded by remember { mutableStateOf(false) }
 
         Box(
@@ -130,7 +148,6 @@ fun TransactionScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
         ) {
-
             Column {
                 Text(
                     text = stringResource(id = R.string.transaction_status),
@@ -156,7 +173,6 @@ fun TransactionScreen(navController: NavController) {
                     shape = RoundedCornerShape(10.dp)
                 )
             }
-
 
             MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
                 DropdownMenu(
@@ -218,6 +234,7 @@ fun TransactionScreen(navController: NavController) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
