@@ -6,6 +6,7 @@
     <string name="executed">Executed</string>
     <string name="declined">Declined</string>
     <string name="in_progress">In progress</string>
+    <string name="select_account">Select the account</string>
 
     
     <!-- Content description -->
