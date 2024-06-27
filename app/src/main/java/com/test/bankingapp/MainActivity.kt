@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity() {
                     )
                     val transactions = listOf(
                         Transaction("OOO 'Company'", "26.06.2024", stringResource(id = R.string.executed),"$10.09"),
-                        Transaction("OOO 'Company'", "24.06.20242", stringResource(id = R.string.declined),"$10.09")
+                        Transaction("OOO 'Enterprise'", "24.06.20242", stringResource(id = R.string.declined),"$11"),
+                        Transaction("OAO 'Syndicate'", "24.06.20242", stringResource(id = R.string.declined),"$25.99")
                     )
                     AccountScreen(accounts = accounts, transactions = transactions)
                 }

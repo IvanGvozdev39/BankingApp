@@ -33,7 +33,8 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedAccount by remember { mutableStateOf<Account?>(null) }
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var isSheetVisible by remember { mutableStateOf(false) }
 
     ModalBottomSheetLayout(
@@ -89,14 +90,10 @@ fun AccountScreen(accounts: List<Account>, transactions: List<Transaction>) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LazyColumn {
-                    items(accounts) { account ->
-                        AccountItem(account) {
-                            coroutineScope.launch {
-                                bottomSheetState.show()
-                                isSheetVisible = true
-                            }
-                        }
+                AccountItem(accounts[0]) {   //todo: change to actual account selection
+                    coroutineScope.launch {
+                        bottomSheetState.show()
+                        isSheetVisible = true
                     }
                 }
 
@@ -218,8 +215,18 @@ fun AccountScreenPreview() {
         Account("For travelling", "9121219291221", "**** 1234")
     )
     val transactions = listOf(
-        Transaction("OOO 'Company'", "UPI/2323232323/TRASANCTION", stringResource(id = R.string.executed),"$10.09"),
-        Transaction("OOO 'Company'", "UPI/2323232323/TRASANCTION", stringResource(id = R.string.declined),"$10.09")
+        Transaction(
+            "OOO 'Company'",
+            "UPI/2323232323/TRASANCTION",
+            stringResource(id = R.string.executed),
+            "$10.09"
+        ),
+        Transaction(
+            "OOO 'Company'",
+            "UPI/2323232323/TRASANCTION",
+            stringResource(id = R.string.declined),
+            "$10.09"
+        )
     )
     AccountScreen(accounts = accounts, transactions = transactions)
 }

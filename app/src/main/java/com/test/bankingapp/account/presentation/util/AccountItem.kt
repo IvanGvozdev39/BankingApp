@@ -29,6 +29,7 @@ fun AccountItem(account: Account, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(110.dp)
             .padding(8.dp)
             .background(
                 color = colorResource(id = R.color.dark_gray),
