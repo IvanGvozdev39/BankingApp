@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.test.bankingapp'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.test.bankingapp"
@@ -69,6 +69,9 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
+    def room_version = "2.4.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }
 
 kapt {
