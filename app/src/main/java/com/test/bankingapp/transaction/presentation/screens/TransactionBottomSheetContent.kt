@@ -104,6 +104,9 @@ fun TransactionBottomSheetContent(
                 onDateSelected = {
                     startDate = it.toString()
                     showStartDateCalendarDialog = false
+                },
+                onDialogDismissed = {
+                    showStartDateCalendarDialog = false
                 }
             )
         }
@@ -144,6 +147,9 @@ fun TransactionBottomSheetContent(
                 selectedDate = LocalDate.now(),
                 onDateSelected = {
                     endDate = it.toString()
+                    showEndDateCalendarDialog = false
+                },
+                onDialogDismissed = {
                     showEndDateCalendarDialog = false
                 }
             )

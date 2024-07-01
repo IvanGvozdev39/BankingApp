@@ -1,28 +1,13 @@
 package com.test.bankingapp.transaction.presentation.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -37,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
 import com.test.bankingapp.transaction.presentation.util.CustomDatePickerDialog
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -52,6 +38,7 @@ fun TransactionScreen(navController: NavController) {
         stringResource(id = R.string.declined)
     )
     var showCalendarDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -152,6 +139,9 @@ fun TransactionScreen(navController: NavController) {
                 onDateSelected = {
                     date = it.toString()
                     showCalendarDialog = false
+                },
+                onDialogDismissed = {
+                    showCalendarDialog = false
                 }
             )
         }
@@ -249,7 +239,6 @@ fun TransactionScreen(navController: NavController) {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
