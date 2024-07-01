@@ -50,6 +50,7 @@ import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
 import com.test.bankingapp.account.domain.model.Account
 import com.test.bankingapp.account.domain.model.Transaction
+import com.test.bankingapp.account.presentation.util.AccountBottomSheetContent
 import com.test.bankingapp.account.presentation.util.AccountItem
 import com.test.bankingapp.navigation.presentation.Screen
 import com.test.bankingapp.util.composable_items.RoundedLazyColumn
@@ -71,7 +72,7 @@ fun AccountScreen(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            BottomSheetContent(
+            AccountBottomSheetContent(
                 accounts = accounts,
                 onAccountSelected = { account ->
                     selectedAccount = account
@@ -164,82 +165,6 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 RoundedLazyColumn(navController = navController, transactions = transactions)
-            }
-        }
-    }
-}
-
-
-@Composable
-fun BottomSheetContent(
-    accounts: List<Account>,
-    onAccountSelected: (Account) -> Unit,
-    onDismissRequest: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.black))
-            .padding(16.dp)
-    ) {
-        Divider(
-            thickness = 6.dp, color = colorResource(id = R.color.dark_gray),
-            modifier = Modifier
-                .width(45.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(id = R.string.select_account),
-            color = colorResource(id = R.color.white),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)
-        )
-
-        LazyColumn {
-            items(accounts) { account ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .background(
-                            color = colorResource(id = R.color.dark_gray),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(16.dp)
-                        .clickable {
-                            onAccountSelected(account)
-                            onDismissRequest()
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.apple_mastercard),
-                        contentDescription = stringResource(id = R.string.account_image),
-                        modifier = Modifier
-                            .width(52.dp)
-                            .height(25.dp)
-                            .padding(top = 5.dp, end = 10.dp)
-                    )
-                    Column {
-                        Text(
-                            text = account.title,
-                            color = colorResource(id = R.color.white),
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = account.accountNumber,
-                            color = colorResource(id = R.color.light_gray),
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = account.debitCardNumber,
-                            color = colorResource(id = R.color.light_gray),
-                            fontSize = 14.sp
-                        )
-                    }
-                }
             }
         }
     }

@@ -47,14 +47,3 @@ fun TransactionItem(transaction: Transaction, navController: NavController) {
             modifier = Modifier.align(alignment = Alignment.Top))
     }
 }
-
-@Composable
-fun TransactionStatus(status: String) {
-    val color = when (status) {
-        stringResource(id = R.string.executed) -> colorResource(id = R.color.green)
-        stringResource(id = R.string.in_progress) -> colorResource(id = R.color.yellow)
-        stringResource(id = R.string.declined) -> colorResource(id = R.color.red)
-        else -> colorResource(id = R.color.white)
-    }
-    Text(text = status, color = color, fontSize = 14.sp)
-}
