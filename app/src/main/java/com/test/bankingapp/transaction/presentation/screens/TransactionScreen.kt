@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +53,7 @@ fun TransactionScreen(navController: NavController) {
         stringResource(id = R.string.declined)
     )
     var showCalendarDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -152,6 +154,9 @@ fun TransactionScreen(navController: NavController) {
                 onDateSelected = {
                     date = it.toString()
                     showCalendarDialog = false
+                },
+                onDialogDismissed = {
+                    showCalendarDialog = false
                 }
             )
         }
@@ -249,7 +254,6 @@ fun TransactionScreen(navController: NavController) {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

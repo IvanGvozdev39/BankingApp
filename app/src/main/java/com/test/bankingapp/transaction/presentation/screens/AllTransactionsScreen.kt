@@ -1,5 +1,6 @@
 package com.test.bankingapp.transaction.presentation.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +67,13 @@ fun AllTransactionsScreen(navController: NavController) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var isSheetVisible by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = isSheetVisible) {
+        coroutineScope.launch {
+            bottomSheetState.hide()
+            isSheetVisible = false
+        }
+    }
 
     ModalBottomSheetLayout(
         sheetContent = {
