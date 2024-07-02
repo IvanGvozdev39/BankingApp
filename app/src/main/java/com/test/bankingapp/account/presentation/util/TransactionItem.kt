@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.navigation.presentation.Screen
+import com.test.bankingapp.room_db.domain.models.TransactionEntity
 
 @Composable
-fun TransactionItem(transaction: Transaction, navController: NavController) {
+fun TransactionItem(transaction: TransactionEntity, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,11 +36,11 @@ fun TransactionItem(transaction: Transaction, navController: NavController) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = transaction.title, color = colorResource(id = R.color.white), fontSize = 16.sp)
-            Text(text = transaction.date, color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
+            Text(text = transaction.appliedIn, color = colorResource(id = R.color.white), fontSize = 16.sp)
+            Text(text = transaction.date.toString(), color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
             TransactionStatus(transaction.status)
         }
-        Text(text = transaction.amount, color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
+        Text(text = transaction.amount.toString(), color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
         Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(
             id = R.string.arrow_right
         ),

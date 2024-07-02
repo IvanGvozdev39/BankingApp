@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.test.bankingapp.room_db.domain.dao.AccountDao
 import com.test.bankingapp.room_db.domain.dao.TransactionDao
 import com.test.bankingapp.room_db.domain.models.AccountEntity
@@ -15,7 +16,7 @@ import com.test.bankingapp.util.Constants
     version = 1,
     exportSchema = false
 )
-
+@TypeConverters(Converters::class)
 abstract class AccountTransactionDatabase: RoomDatabase() {
     abstract fun accountDao(): AccountDao
     abstract fun transactionDao(): TransactionDao

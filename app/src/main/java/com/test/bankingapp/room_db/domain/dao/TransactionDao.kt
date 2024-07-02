@@ -1,12 +1,6 @@
 package com.test.bankingapp.room_db.domain.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
-import com.test.bankingapp.room_db.data.constants.TransactionFieldNames
+import androidx.room.*
 import com.test.bankingapp.room_db.domain.models.TransactionEntity
 import com.test.bankingapp.util.Constants
 import kotlinx.coroutines.flow.Flow
@@ -23,8 +17,10 @@ interface TransactionDao {
     @Delete
     suspend fun delete(transaction: TransactionEntity)
 
-    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE ${TransactionFieldNames.ACCOUNT_ID} = :accountNumber")
-    fun getTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>>
+    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber")
+    fun getTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>> // Flow or LiveData
 
+    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber ORDER BY date DESC LIMIT 5")
+    fun getRecentTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>> // Flow or LiveData
 
 }

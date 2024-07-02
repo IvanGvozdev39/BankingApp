@@ -26,12 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Account
+import com.test.bankingapp.room_db.domain.models.AccountEntity
 
 @Composable
 fun AccountBottomSheetContent(
-    accounts: List<Account>,
-    onAccountSelected: (Account) -> Unit,
+    accounts: List<AccountEntity>,
+    onAccountSelected: (AccountEntity) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Column(
@@ -82,17 +82,17 @@ fun AccountBottomSheetContent(
                     )
                     Column {
                         Text(
-                            text = account.title,
+                            text = account.accountName,
                             color = colorResource(id = R.color.white),
                             fontSize = 16.sp
                         )
                         Text(
-                            text = account.accountNumber,
+                            text = account.accountNumber.toString(),
                             color = colorResource(id = R.color.light_gray),
                             fontSize = 14.sp
                         )
                         Text(
-                            text = account.debitCardNumber,
+                            text = account.cardNumber.toString(),
                             color = colorResource(id = R.color.light_gray),
                             fontSize = 14.sp
                         )
