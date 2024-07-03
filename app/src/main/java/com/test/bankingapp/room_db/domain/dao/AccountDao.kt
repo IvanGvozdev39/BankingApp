@@ -15,17 +15,20 @@ import kotlinx.coroutines.flow.Flow
 interface AccountDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(accountNumber: Long)
+    suspend fun insert(account: AccountEntity)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(accountNumber: Long)
+    suspend fun update(account: AccountEntity)
 
     @Delete
-    suspend fun delete(accountNumber: Long)
+    suspend fun delete(account: AccountEntity)
 
     @Query("SELECT * FROM ${Constants.ACCOUNT_TABLE_NAME}")
     fun getAllAccounts(): Flow<List<AccountEntity>>
 
-    @Query("SELECT * FROM ${Constants.ACCOUNT_TABLE_NAME} WHERE ${AccountFieldNames.ACCOUNT_NUMBER} =:accountNumber")
-    fun getAccount(accountNumber: Long): Flow<Long>
+    @Query("SELECT * FROM ${Constants.ACCOUNT_TABLE_NAME} WHERE ${AccountFieldNames.ACCOUNT_NUMBER} = :accountNumber")
+    fun getAccount(accountNumber: Long): Flow<AccountEntity?>
+
+    @Query("SELECT COUNT(*) FROM ${Constants.ACCOUNT_TABLE_NAME} WHERE ${AccountFieldNames.ACCOUNT_NUMBER} = :accountNumber")
+    suspend fun countByAccountNumber(accountNumber: Long): Int
 }

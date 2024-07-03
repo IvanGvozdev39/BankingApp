@@ -1,5 +1,6 @@
 package com.test.bankingapp.util.composable_items
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,11 +15,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Transaction
 import com.test.bankingapp.account.presentation.util.TransactionItem
+import com.test.bankingapp.room_db.domain.models.TransactionEntity
 
 @Composable
-fun RoundedLazyColumn(navController: NavController, transactions: List<Transaction>) {
+fun RoundedLazyColumn(navController: NavController, transactions: List<TransactionEntity>) {
     Box(
         modifier = Modifier
             .background(
@@ -36,9 +37,10 @@ fun RoundedLazyColumn(navController: NavController, transactions: List<Transacti
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    TransactionItem(transaction = transactions[index],
+                    TransactionItem(
+                        transaction = transactions[index],
                         navController = navController)
-                    // Add a divider if it's not the last item
+
                     if (index < transactions.size - 1) {
                         Divider(
                             color = colorResource(id = R.color.gray),

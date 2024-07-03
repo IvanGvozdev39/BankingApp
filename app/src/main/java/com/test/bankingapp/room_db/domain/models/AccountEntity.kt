@@ -7,7 +7,6 @@ import com.test.bankingapp.util.Constants
 @Entity(tableName = Constants.ACCOUNT_TABLE_NAME)
 data class AccountEntity(
     val accountName: String,
-    @PrimaryKey
-    val accountNumber: Long,
+    @PrimaryKey val accountNumber: Long,
     val cardNumber: Long
 )
