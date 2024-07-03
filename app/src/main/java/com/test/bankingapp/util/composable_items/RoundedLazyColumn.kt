@@ -1,5 +1,6 @@
 package com.test.bankingapp.util.composable_items
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,7 @@ fun RoundedLazyColumn(navController: NavController, transactions: List<Transacti
                     TransactionItem(
                         transaction = transactions[index],
                         navController = navController)
-                    // Add a divider if it's not the last item
+
                     if (index < transactions.size - 1) {
                         Divider(
                             color = colorResource(id = R.color.gray),

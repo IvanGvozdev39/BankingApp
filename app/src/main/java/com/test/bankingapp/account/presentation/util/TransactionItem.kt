@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.test.bankingapp.R
 import com.test.bankingapp.navigation.presentation.Screen
 import com.test.bankingapp.room_db.domain.models.TransactionEntity
+import com.test.bankingapp.util.formatAmount
 
 @Composable
 fun TransactionItem(transaction: TransactionEntity, navController: NavController) {
@@ -40,7 +41,7 @@ fun TransactionItem(transaction: TransactionEntity, navController: NavController
             Text(text = transaction.date.toString(), color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
             TransactionStatus(transaction.status)
         }
-        Text(text = transaction.amount.toString(), color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
+        Text(text = formatAmount(transaction.amount), color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
         Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(
             id = R.string.arrow_right
         ),

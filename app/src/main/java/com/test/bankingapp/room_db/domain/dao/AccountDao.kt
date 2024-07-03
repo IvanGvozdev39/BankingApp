@@ -24,9 +24,11 @@ interface AccountDao {
     suspend fun delete(account: AccountEntity)
 
     @Query("SELECT * FROM ${Constants.ACCOUNT_TABLE_NAME}")
-    fun getAllAccounts(): Flow<List<AccountEntity>> // Flow or LiveData
+    fun getAllAccounts(): Flow<List<AccountEntity>>
 
     @Query("SELECT * FROM ${Constants.ACCOUNT_TABLE_NAME} WHERE ${AccountFieldNames.ACCOUNT_NUMBER} = :accountNumber")
-    fun getAccount(accountNumber: Long): Flow<AccountEntity?> // Flow or LiveData
+    fun getAccount(accountNumber: Long): Flow<AccountEntity?>
 
+    @Query("SELECT COUNT(*) FROM ${Constants.ACCOUNT_TABLE_NAME} WHERE ${AccountFieldNames.ACCOUNT_NUMBER} = :accountNumber")
+    suspend fun countByAccountNumber(accountNumber: Long): Int
 }

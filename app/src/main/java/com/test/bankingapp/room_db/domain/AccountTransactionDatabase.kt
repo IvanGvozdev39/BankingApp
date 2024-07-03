@@ -13,27 +13,29 @@ import com.test.bankingapp.util.Constants
 
 @Database(
     entities = [AccountEntity::class, TransactionEntity::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class AccountTransactionDatabase: RoomDatabase() {
+abstract class AccountTransactionDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
     abstract fun transactionDao(): TransactionDao
 
     companion object {
         @Volatile
-        var INSTANCE: AccountTransactionDatabase? = null
+        private var INSTANCE: AccountTransactionDatabase? = null
 
         fun getDatabase(context: Context): AccountTransactionDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context,
+                    context.applicationContext,
                     AccountTransactionDatabase::class.java,
                     Constants.ACCOUNT_TRANSACTION_DATABASE_NAME
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // This will allow destructive migrations
+                    .build()
                 INSTANCE = instance
-                return instance
+                instance
             }
         }
     }

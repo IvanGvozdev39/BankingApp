@@ -7,10 +7,11 @@ import java.time.LocalDate
 
 @Entity(tableName = Constants.TRANSACTION_TABLE_NAME)
 data class TransactionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val appliedIn: String,
-    @PrimaryKey val number: Long,
+    val number: Long,
     val date: LocalDate,
     val status: String,
-    val amount: Int,
+    val amount: Float,
     val accountId: Long
 )

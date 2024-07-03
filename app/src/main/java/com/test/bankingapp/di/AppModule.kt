@@ -35,4 +35,10 @@ object AppModule {
     fun provideTransactionDao(appDatabase: AccountTransactionDatabase): TransactionDao {
         return appDatabase.transactionDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext appContext: Context): Context {
+        return appContext
+    }
 }
