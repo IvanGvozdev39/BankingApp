@@ -4,4 +4,9 @@
     <style name="Theme.BankingApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
     </style>
+
+    <style name="Theme.BankingApp.SplashScreen" parent="Theme.BankingApp">
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+        <item name="android:statusBarColor">@color/splash_gray</item>
+    </style>
 </resources>
