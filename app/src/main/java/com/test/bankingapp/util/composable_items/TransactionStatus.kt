@@ -1,4 +1,4 @@
-package com.test.bankingapp.account.presentation.util
+package com.test.bankingapp.util.composable_items
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

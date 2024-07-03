@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.test.bankingapp.room_db.domain.AccountTransactionDatabase
 import com.test.bankingapp.room_db.domain.dao.AccountDao
 import com.test.bankingapp.room_db.domain.dao.TransactionDao
+import com.test.bankingapp.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +23,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AccountTransactionDatabase::class.java,
-            "banking_app_db"
+            Constants.DATABASE_NAME
         ).build()
     }
 

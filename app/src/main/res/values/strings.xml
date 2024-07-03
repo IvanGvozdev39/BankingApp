@@ -8,7 +8,7 @@
     <string name="in_progress">In progress</string>
     <string name="select_account">Select the account</string>
     <string name="transaction">Transaction</string>
-    <string name="okay">Okay</string>
+    <string name="save">Save</string>
     <string name="transaction_was_applied_in">Transaction was applied in</string>
     <string name="transaction_number">Transaction number</string>
     <string name="date">Date</string>
@@ -27,6 +27,9 @@
     <string name="create">Create</string>
     <string name="account_created_successfully">Account created successfully</string>
     <string name="transaction_created_successfully">Transaction created successfully</string>
+    <string name="okay">Okay</string>
+    <string name="clear">Clear</string>
+    <string name="enddate_cannot_be_before_startdate">End date cannot be earlier than Start date</string>
 
     
     <!-- Content description -->

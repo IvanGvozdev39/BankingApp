@@ -2,16 +2,11 @@ package com.test.bankingapp.navigation.presentation
 
 sealed class Screen(val route: String) {
     object AccountScreen: Screen("account_screen")
-    object TransactionScreen: Screen("transaction_screen")
-    object AllTransactionsScreen: Screen("all_transactions_screen")
-    object AddAccountScreen: Screen("add_account_screen")
-
-    fun withArgs(vararg args: String): String {
-        return buildString {
-            append(route)
-            args.forEach { arg ->
-                append("/$arg")
-            }
+    object TransactionScreen: Screen("transaction_screen?transactionId={transactionId}") {
+        fun passTransactionId(transactionId: Long): String {
+            return "transaction_screen?transactionId=$transactionId"
         }
     }
+    object AllTransactionsScreen: Screen("all_transactions_screen")
+    object AddAccountScreen: Screen("add_account_screen")
 }

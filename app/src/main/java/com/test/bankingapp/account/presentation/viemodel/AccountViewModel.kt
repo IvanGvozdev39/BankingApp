@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.bankingapp.account.domain.usecase.AddAccountUseCase
 import com.test.bankingapp.account.domain.usecase.GetAccountsUseCase
-import com.test.bankingapp.account.domain.usecase.GetRecentTransactionsUseCase
+import com.test.bankingapp.transaction.domain.usecase.GetRecentTransactionsUseCase
 import com.test.bankingapp.room_db.domain.models.AccountEntity
 import com.test.bankingapp.room_db.domain.models.TransactionEntity
 import com.test.bankingapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject

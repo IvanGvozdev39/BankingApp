@@ -17,10 +17,14 @@ interface TransactionDao {
     @Delete
     suspend fun delete(transaction: TransactionEntity)
 
-    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber")
-    fun getTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>> // Flow or LiveData
+    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber ORDER BY date DESC")
+    fun getTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>>
 
     @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber ORDER BY date DESC LIMIT 5")
-    fun getRecentTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>> // Flow or LiveData
+    fun getRecentTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountId " +
+            "AND number = :transactionId LIMIT 1")
+    fun getTransactionById(accountId: Long, transactionId: Long): Flow<TransactionEntity>
 
 }
