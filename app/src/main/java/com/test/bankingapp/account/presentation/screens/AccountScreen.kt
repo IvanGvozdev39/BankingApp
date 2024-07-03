@@ -74,7 +74,6 @@ fun AccountScreen(
         }
     }
 
-    Log.d("abcd123", "Selected account is ${selectedAccount.toString()}")
     selectedAccount?.let { viewModel.recentTransactionsForAccount(it.accountNumber) }
 
     ModalBottomSheetLayout(
@@ -106,7 +105,7 @@ fun AccountScreen(
                 selectedAccount?.let {
                     FloatingActionButton(
                         onClick = {
-                            navController.navigate(Screen.TransactionScreen.route)
+                            navController.navigate(route = Screen.TransactionScreen.passTransactionId(-1))
                         },
                         backgroundColor = colorResource(id = R.color.blue),
                         contentColor = colorResource(id = R.color.white)

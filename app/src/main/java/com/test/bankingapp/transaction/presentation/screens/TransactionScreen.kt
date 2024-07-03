@@ -22,6 +22,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,23 +52,51 @@ import java.time.LocalDate
 @Composable
 fun TransactionScreen(
     navController: NavController,
+    transactionId: Long = -1,
     viewModel: TransactionViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val pref = context.getSharedPreferences(Constants.SHARED_PREF_S, Context.MODE_PRIVATE)
+    val selectedAccountId = pref.getLong(Constants.PREF_SELECTED_ACCOUNT_ID_KEY, -1)
 
-    var appliedIn by remember { mutableStateOf("") }
-    var transactionNumber by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
-    var localDate by remember { mutableStateOf<LocalDate?>(null) }
-    var transactionStatus by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
+    val transaction by viewModel.transaction.collectAsState(initial = null)
+
+    LaunchedEffect(transactionId) {
+        if (selectedAccountId != -1L && transactionId != -1L) {
+            viewModel.getTransactionById(selectedAccountId, transactionId)
+        }
+    }
+
+    Log.d("TransactionScreen", "accountId: $selectedAccountId. transactionId: $transactionId")
+    Log.d("TransactionScreen", "Transaction is $transaction")
+
+    var appliedIn by remember { mutableStateOf(transaction?.appliedIn ?: "") }
+    var transactionNumber by remember { mutableStateOf(transaction?.number?.toString() ?: "") }
+    var date by remember { mutableStateOf(transaction?.date?.toString() ?: "") }
+    var localDate by remember { mutableStateOf(transaction?.date) }
+    var transactionStatus by remember { mutableStateOf(transaction?.status ?: "") }
+    var amount by remember { mutableStateOf(transaction?.amount?.toString() ?: "") }
+
+    LaunchedEffect(transaction) {
+        transaction?.let {
+            appliedIn = it.appliedIn
+            transactionNumber = it.number.toString()
+            date = it.date.toString()
+            localDate = it.date
+            transactionStatus = it.status
+            amount = it.amount.toString()
+        }
+    }
+
     val statusOptions = listOf(
         stringResource(id = R.string.executed),
         stringResource(id = R.string.in_progress),
         stringResource(id = R.string.declined)
     )
     var showCalendarDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     val successMessage = stringResource(id = R.string.transaction_created_successfully)
+
+    val isEditable = transaction == null
 
     Column(
         modifier = Modifier
@@ -98,13 +128,16 @@ fun TransactionScreen(
                 textColor = colorResource(id = R.color.white),
                 focusedBorderColor = colorResource(id = R.color.white),
                 unfocusedBorderColor = colorResource(id = R.color.white),
-                cursorColor = colorResource(id = R.color.white)
+                cursorColor = colorResource(id = R.color.white),
+                disabledTextColor = Color.White,
+                disabledBorderColor = Color.Gray
             ),
             shape = RoundedCornerShape(10.dp),
             textStyle = TextStyle(
                 color = colorResource(id = R.color.white),
                 fontSize = 16.sp
-            )
+            ),
+            enabled = isEditable
         )
 
         Text(
@@ -124,10 +157,13 @@ fun TransactionScreen(
                 textColor = colorResource(id = R.color.white),
                 focusedBorderColor = colorResource(id = R.color.white),
                 unfocusedBorderColor = colorResource(id = R.color.white),
-                cursorColor = colorResource(id = R.color.white)
+                cursorColor = colorResource(id = R.color.white),
+                disabledTextColor = Color.White,
+                disabledBorderColor = Color.Gray
             ),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            enabled = isEditable
         )
 
         Text(
@@ -143,14 +179,12 @@ fun TransactionScreen(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
                 .height(54.dp)
-                .clickable {
-                    showCalendarDialog = true
-                },
+                .clickable { if (isEditable) showCalendarDialog = true },
             enabled = false,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.White,
                 disabledTextColor = Color.White,
-                disabledBorderColor = Color.White,
+                disabledBorderColor = if(isEditable) Color.White else colorResource(id = R.color.light_gray),
                 disabledLabelColor = Color.Gray,
                 cursorColor = colorResource(id = R.color.white)
             ),
@@ -158,9 +192,8 @@ fun TransactionScreen(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
         )
-
 
         if (showCalendarDialog) {
             CustomDatePickerDialog(
@@ -195,13 +228,13 @@ fun TransactionScreen(
                     onValueChange = { transactionStatus = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { expanded = !expanded }
+                        .clickable { if (isEditable) expanded = !expanded }
                         .height(54.dp),
                     enabled = false,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = Color.White,
+                        textColor = colorResource(id = R.color.white),
                         disabledTextColor = Color.White,
-                        disabledBorderColor = Color.White,
+                        disabledBorderColor = if(isEditable) Color.White else colorResource(id = R.color.light_gray),
                         disabledLabelColor = Color.Gray,
                         cursorColor = colorResource(id = R.color.white)
                     ),
@@ -213,8 +246,7 @@ fun TransactionScreen(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     statusOptions.forEach { status ->
                         DropdownMenuItem(onClick = {
@@ -239,43 +271,44 @@ fun TransactionScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
-                .height(62.dp),
+                .height(54.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = colorResource(id = R.color.white),
                 focusedBorderColor = colorResource(id = R.color.white),
                 unfocusedBorderColor = colorResource(id = R.color.white),
-                cursorColor = colorResource(id = R.color.white)
+                cursorColor = colorResource(id = R.color.white),
+                disabledTextColor = Color.White,
+                disabledBorderColor = Color.Gray
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            enabled = isEditable
         )
 
         Button(
             onClick = {
-                val pref = context.getSharedPreferences(Constants.SHARED_PREF_S, Context.MODE_PRIVATE)
-                val accountId = pref.getLong(Constants.PREF_SELECTED_ACCOUNT_ID_KEY, 0)
-                Log.d("eded32", "Retrieved accountId from shared preferences: $accountId")
+                if (isEditable) {
+                    val accountId = pref.getLong(Constants.PREF_SELECTED_ACCOUNT_ID_KEY, 0)
 
+                    if (localDate != null) {
+                        val newTransaction = TransactionEntity(
+                            appliedIn = appliedIn,
+                            number = transactionNumber.toLongOrNull() ?: 0,
+                            date = localDate!!,
+                            status = transactionStatus,
+                            amount = amount.toFloatOrNull() ?: 0f,
+                            accountId = accountId
+                        )
+                        Log.d("TransactionScreen", "Transaction to be added: $newTransaction")
 
-                if (localDate == null) {
-                    Log.d("eded32", "Date is not set")
-                    Toast.makeText(context, "Date is not set", Toast.LENGTH_SHORT).show()
+                        viewModel.addTransaction(newTransaction)
+                        Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }
                 } else {
-                    val transaction = TransactionEntity(
-                        appliedIn = appliedIn,
-                        number = transactionNumber.toLongOrNull() ?: 0,
-                        date = localDate!!,
-                        status = transactionStatus,
-                        amount = amount.toFloatOrNull() ?: 0f,
-                        accountId = accountId
-                    )
-                    Log.d("eded32", "Transaction to be added: $transaction")
-
-                    viewModel.addTransaction(transaction)
-                    Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 }
             },
@@ -289,7 +322,10 @@ fun TransactionScreen(
             ),
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = stringResource(id = R.string.okay), fontSize = 16.sp)
+            Text(
+                text = if (isEditable) stringResource(id = R.string.save) else stringResource(id = R.string.okay),
+                fontSize = 16.sp
+            )
         }
     }
 }

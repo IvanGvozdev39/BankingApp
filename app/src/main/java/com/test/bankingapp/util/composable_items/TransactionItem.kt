@@ -1,5 +1,6 @@
-package com.test.bankingapp.account.presentation.util
+package com.test.bankingapp.util.composable_items
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +34,10 @@ fun TransactionItem(transaction: TransactionEntity, navController: NavController
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(16.dp)
-            .clickable { navController.navigate(Screen.TransactionScreen.route) },
+            .clickable {
+                Log.d("afaf", "Passing parameter: ${transaction.number}")
+                navController.navigate(route = Screen.TransactionScreen.passTransactionId(transaction.number))
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -42,9 +46,6 @@ fun TransactionItem(transaction: TransactionEntity, navController: NavController
             TransactionStatus(transaction.status)
         }
         Text(text = formatAmount(transaction.amount), color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
-        Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(
-            id = R.string.arrow_right
-        ),
-            modifier = Modifier.align(alignment = Alignment.Top))
+        Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(id = R.string.arrow_right), modifier = Modifier.align(alignment = Alignment.Top))
     }
 }

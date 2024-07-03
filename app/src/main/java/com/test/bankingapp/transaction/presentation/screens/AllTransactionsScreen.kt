@@ -19,6 +19,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,31 +34,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Transaction
+import com.test.bankingapp.room_db.domain.models.TransactionEntity
+import com.test.bankingapp.transaction.presentation.viewmodel.AllTransactionsViewModel
 import com.test.bankingapp.util.composable_items.RoundedLazyColumn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AllTransactionsScreen(navController: NavController) {
-    val transactions = listOf(
-        Transaction("OOO 'Company'", "26.06.2024", stringResource(id = R.string.in_progress),"$10.09"),
-        Transaction("OOO 'Enterprise'", "24.06.2024", stringResource(id = R.string.executed),"$11"),
-        Transaction("OAO 'Syndicate'", "24.06.2024", stringResource(id = R.string.executed),"$25.99")
-    )
+fun AllTransactionsScreen(
+    navController: NavController,
+    viewModel: AllTransactionsViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var isSheetVisible by remember { mutableStateOf(false) }
+    val transactions by viewModel.transactions.collectAsState()
+    var filteredTransactions by remember { mutableStateOf(emptyList<TransactionEntity>()) }
+    var filterApplied by remember { mutableStateOf(false)}
 
     BackHandler(enabled = isSheetVisible) {
         coroutineScope.launch {
             bottomSheetState.hide()
             isSheetVisible = false
         }
+    }
+
+    viewModel.getAllTransactions()
+
+    val handleOnFilterUpdate: (String, String) -> Unit = { startDate, endDate ->
+        filterApplied = true
+        filteredTransactions = filterTransactions(startDate, endDate, transactions)
     }
 
     ModalBottomSheetLayout(
@@ -67,8 +79,12 @@ fun AllTransactionsScreen(navController: NavController) {
                     bottomSheetState.hide()
                     isSheetVisible = false
                 }
-            })
-        },
+            },
+                onFilterApply = handleOnFilterUpdate,
+                onFilterCleared = {
+                    filterApplied = false
+                }
+            )},
         sheetState = bottomSheetState,
         scrimColor = if (isSheetVisible) Color.Black.copy(alpha = 0.6f) else Color.Transparent
     ) {
@@ -116,8 +132,21 @@ fun AllTransactionsScreen(navController: NavController) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            RoundedLazyColumn(navController = navController, transactions = emptyList()) //todo: temp emptyList. Replace with transacions
+            RoundedLazyColumn(navController = navController, transactions = if(filterApplied) filteredTransactions else transactions)
         }
+    }
+
+}
+
+fun filterTransactions(startDate: String, endDate: String, transactions: List<TransactionEntity>): List<TransactionEntity> {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val startLocalDate = LocalDate.parse(startDate, formatter)
+    val endLocalDate = LocalDate.parse(endDate, formatter)
+
+    return transactions.filter { transaction ->
+        val transactionDate = LocalDate.parse(transaction.date.toString(), formatter)
+        transactionDate.isEqual(startLocalDate) || transactionDate.isEqual(endLocalDate) ||
+                (transactionDate.isAfter(startLocalDate) && transactionDate.isBefore(endLocalDate))
     }
 }
 
