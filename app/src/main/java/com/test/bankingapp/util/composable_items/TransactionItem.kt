@@ -1,9 +1,9 @@
 package com.test.bankingapp.util.composable_items
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,26 +26,50 @@ import com.test.bankingapp.util.formatAmount
 
 @Composable
 fun TransactionItem(transaction: TransactionEntity, navController: NavController) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = colorResource(id = R.color.dark_gray),
-                shape = RoundedCornerShape(16.dp)
+    Box(modifier = Modifier.fillMaxWidth()
+        .clickable {
+            navController.navigate(
+                route = Screen.TransactionScreen.passTransactionId(
+                    transaction.number
+                )
             )
-            .padding(16.dp)
-            .clickable {
-                Log.d("afaf", "Passing parameter: ${transaction.number}")
-                navController.navigate(route = Screen.TransactionScreen.passTransactionId(transaction.number))
-            },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = transaction.appliedIn, color = colorResource(id = R.color.white), fontSize = 16.sp)
-            Text(text = transaction.date.toString(), color = colorResource(id = R.color.light_gray), fontSize = 14.sp)
-            TransactionStatus(transaction.status)
+        }) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = colorResource(id = R.color.dark_gray),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = if (transaction.appliedIn.length < 15) transaction.appliedIn
+                    else transaction.appliedIn.take(12) + "...",
+                    color = colorResource(id = R.color.white),
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = transaction.date.toString(),
+                    color = colorResource(id = R.color.light_gray),
+                    fontSize = 14.sp
+                )
+                TransactionStatus(transaction.status)
+            }
+            Text(
+                text = if (transaction.amount.toString().length < 10) formatAmount(transaction.amount)
+                else formatAmount(transaction.amount).take(10) + "...",
+                color = colorResource(id = R.color.white),
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Top)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = stringResource(id = R.string.arrow_right),
+                modifier = Modifier.align(alignment = Alignment.Top)
+            )
         }
-        Text(text = formatAmount(transaction.amount), color = colorResource(id = R.color.white), fontSize = 16.sp, modifier = Modifier.align(Alignment.Top))
-        Image(painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = stringResource(id = R.string.arrow_right), modifier = Modifier.align(alignment = Alignment.Top))
     }
 }

@@ -1,6 +1,5 @@
 package com.test.bankingapp.account.presentation.screens
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,18 +34,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Account
 import com.test.bankingapp.account.presentation.util.AccountBottomSheetContent
 import com.test.bankingapp.account.presentation.util.AccountItem
 import com.test.bankingapp.account.presentation.viewmodel.AccountViewModel
 import com.test.bankingapp.navigation.presentation.Screen
+import com.test.bankingapp.room_db.domain.models.AccountEntity
 import com.test.bankingapp.util.Constants
+import com.test.bankingapp.util.Fonts
 import com.test.bankingapp.util.composable_items.RoundedLazyColumn
 import com.test.bankingapp.util.shared_preferences.SaveLong
 import kotlinx.coroutines.launch
@@ -66,6 +64,12 @@ fun AccountScreen(
     val accounts by viewModel.accounts.collectAsState()
     val selectedAccount by viewModel.selectedAccount.collectAsState()
     val recentTransactions by viewModel.recentTransactions.collectAsState()
+
+    val handleAccountDelete: (AccountEntity) -> Unit = { account ->
+        coroutineScope.launch {
+            viewModel.deleteAccount(account)
+        }
+    }
 
     BackHandler(enabled = isSheetVisible) {
         coroutineScope.launch {
@@ -93,7 +97,8 @@ fun AccountScreen(
                         bottomSheetState.hide()
                         isSheetVisible = false
                     }
-                }
+                },
+                onAccountDelete = handleAccountDelete
             )
         },
         sheetState = bottomSheetState,
@@ -134,7 +139,7 @@ fun AccountScreen(
                         text = stringResource(id = R.string.account),
                         color = colorResource(id = R.color.white),
                         fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontFamily = Fonts.SF_SEMIBOLD_FONT,
                         modifier = Modifier.padding(start = 8.dp)
                     )
                     Spacer(
@@ -148,7 +153,8 @@ fun AccountScreen(
                         Text(
                             text = stringResource(id = R.string.add_account).uppercase(),
                             color = colorResource(id = R.color.blue),
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            fontFamily = Fonts.SF_LIGHT_FONT
                         )
                     }
                 }
@@ -156,13 +162,7 @@ fun AccountScreen(
 
                 selectedAccount?.let {
                     SaveLong(key = Constants.PREF_SELECTED_ACCOUNT_ID_KEY, value = selectedAccount!!.accountNumber)
-                    AccountItem(
-                        Account(
-                            title = it.accountName,
-                            accountNumber = it.accountNumber.toString(),
-                            debitCardNumber = it.cardNumber.toString()
-                        )
-                    ) {
+                    AccountItem(it) {
                         coroutineScope.launch {
                             bottomSheetState.show()
                             isSheetVisible = true
@@ -182,7 +182,7 @@ fun AccountScreen(
                             text = stringResource(id = R.string.recent_transactions),
                             color = colorResource(id = R.color.white),
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                            fontFamily = Fonts.SF_SEMIBOLD_FONT
                         )
                         Spacer(
                             Modifier
@@ -196,7 +196,8 @@ fun AccountScreen(
                                 text = stringResource(id = R.string.view_all).uppercase(),
                                 color = colorResource(id = R.color.blue),
                                 fontSize = 13.sp,
-                                modifier = Modifier.padding(bottom = 10.dp)
+                                modifier = Modifier.padding(bottom = 10.dp),
+                                fontFamily = Fonts.SF_LIGHT_FONT
                             )
                         }
                     }
@@ -205,13 +206,13 @@ fun AccountScreen(
                     RoundedLazyColumn(navController = navController, transactions = recentTransactions)
                 } else {
                     Text(
-                        text = stringResource(id = R.string.no_recent_transactions),
+                        text = stringResource(id = if (selectedAccount != null) R.string.no_recent_transactions else R.string.add_account_to_get_started),
                         color = colorResource(id = R.color.light_gray),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             .padding(start = 8.dp)
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally),
+                        fontFamily = Fonts.SF_LIGHT_FONT
                     )
                 }
             }

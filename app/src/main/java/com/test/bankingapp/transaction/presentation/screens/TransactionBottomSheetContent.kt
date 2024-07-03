@@ -31,13 +31,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.test.bankingapp.R
 import com.test.bankingapp.transaction.presentation.util.CustomDatePickerDialog
+import com.test.bankingapp.util.Fonts
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -82,7 +82,7 @@ fun TransactionBottomSheetContent(
                 text = stringResource(id = R.string.filter_by_date),
                 color = colorResource(id = R.color.white),
                 fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
+                fontFamily = Fonts.SF_SEMIBOLD_FONT,
                 modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)
             )
             Spacer(
@@ -97,7 +97,8 @@ fun TransactionBottomSheetContent(
                 Text(
                     text = stringResource(id = R.string.clear).uppercase(),
                     color = colorResource(id = R.color.blue),
-                    fontSize = 13.sp
+                    fontSize = 13.sp,
+                    fontFamily = Fonts.SF_LIGHT_FONT
                 )
             }
         }
@@ -106,7 +107,8 @@ fun TransactionBottomSheetContent(
             text = stringResource(id = R.string.start_date),
             color = colorResource(id = R.color.white),
             fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = startDate,
@@ -150,7 +152,8 @@ fun TransactionBottomSheetContent(
             text = stringResource(id = R.string.end_date),
             color = colorResource(id = R.color.white),
             fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = endDate,
@@ -232,7 +235,7 @@ fun TransactionBottomSheetContent(
             ),
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = stringResource(id = R.string.submit), fontSize = 16.sp)
+            Text(text = stringResource(id = R.string.submit), fontSize = 16.sp, fontFamily = Fonts.SF_SEMIBOLD_FONT)
         }
 
     }

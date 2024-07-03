@@ -47,6 +47,7 @@ import com.test.bankingapp.room_db.domain.models.TransactionEntity
 import com.test.bankingapp.transaction.presentation.util.CustomDatePickerDialog
 import com.test.bankingapp.transaction.presentation.viewmodel.TransactionViewModel
 import com.test.bankingapp.util.Constants
+import com.test.bankingapp.util.Fonts
 import java.time.LocalDate
 
 @Composable
@@ -66,9 +67,6 @@ fun TransactionScreen(
             viewModel.getTransactionById(selectedAccountId, transactionId)
         }
     }
-
-    Log.d("TransactionScreen", "accountId: $selectedAccountId. transactionId: $transactionId")
-    Log.d("TransactionScreen", "Transaction is $transaction")
 
     var appliedIn by remember { mutableStateOf(transaction?.appliedIn ?: "") }
     var transactionNumber by remember { mutableStateOf(transaction?.number?.toString() ?: "") }
@@ -95,7 +93,12 @@ fun TransactionScreen(
     )
     var showCalendarDialog by remember { mutableStateOf(false) }
     val successMessage = stringResource(id = R.string.transaction_created_successfully)
-
+    val appliedInMessge = stringResource(id = R.string.applied_in_field_cannot_be_empty)
+    val transactionNumberMessage = stringResource(id = R.string.transaction_number_must_be_a_number)
+    val dateMessage = stringResource(id = R.string.transaction_date_not_set)
+    val transactionStatusMessage = stringResource(id = R.string.transaction_status_not_set)
+    val amountMessage = stringResource(id = R.string.amount_cannot_be_empty)
+    
     val isEditable = transaction == null
 
     Column(
@@ -108,14 +111,16 @@ fun TransactionScreen(
             text = stringResource(id = R.string.transaction),
             color = colorResource(id = R.color.white),
             fontSize = 28.sp,
-            modifier = Modifier.padding(bottom = 28.dp)
+            modifier = Modifier.padding(bottom = 28.dp),
+            fontFamily = Fonts.SF_SEMIBOLD_FONT
         )
 
         Text(
             text = stringResource(id = R.string.transaction_was_applied_in),
             color = colorResource(id = R.color.white),
             fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = appliedIn,
@@ -137,14 +142,16 @@ fun TransactionScreen(
                 color = colorResource(id = R.color.white),
                 fontSize = 16.sp
             ),
-            enabled = isEditable
+            enabled = isEditable,
+            singleLine = true
         )
 
         Text(
             text = stringResource(id = R.string.transaction_number),
             color = colorResource(id = R.color.white),
             fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = transactionNumber,
@@ -163,14 +170,16 @@ fun TransactionScreen(
             ),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             shape = RoundedCornerShape(10.dp),
-            enabled = isEditable
+            enabled = isEditable,
+            singleLine = true
         )
 
         Text(
             text = stringResource(id = R.string.date),
             color = colorResource(id = R.color.white),
             fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = date,
@@ -193,6 +202,7 @@ fun TransactionScreen(
                 imeAction = ImeAction.Next
             ),
             shape = RoundedCornerShape(10.dp),
+            singleLine = true
         )
 
         if (showCalendarDialog) {
@@ -221,7 +231,8 @@ fun TransactionScreen(
                     text = stringResource(id = R.string.transaction_status),
                     color = colorResource(id = R.color.white),
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontFamily = Fonts.SF_LIGHT_FONT
                 )
                 OutlinedTextField(
                     value = transactionStatus,
@@ -238,7 +249,8 @@ fun TransactionScreen(
                         disabledLabelColor = Color.Gray,
                         cursorColor = colorResource(id = R.color.white)
                     ),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    singleLine = true
                 )
             }
 
@@ -263,7 +275,8 @@ fun TransactionScreen(
         Text(
             text = stringResource(id = R.string.amount),
             color = colorResource(id = R.color.white),
-            fontSize = 18.sp
+            fontSize = 18.sp,
+            fontFamily = Fonts.SF_LIGHT_FONT
         )
         OutlinedTextField(
             value = amount,
@@ -285,14 +298,36 @@ fun TransactionScreen(
                 imeAction = ImeAction.Done
             ),
             shape = RoundedCornerShape(10.dp),
-            enabled = isEditable
+            enabled = isEditable,
+            singleLine = true
         )
 
         Button(
             onClick = {
                 if (isEditable) {
-                    val accountId = pref.getLong(Constants.PREF_SELECTED_ACCOUNT_ID_KEY, 0)
+                    if (appliedIn.trim().isEmpty()) {
+                        Toast.makeText(context, appliedInMessge, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    if (transactionNumber.trim().isEmpty() || !transactionNumber.all { it.isDigit() }) {
+                        Toast.makeText(context, transactionNumberMessage, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    if (date.isEmpty()) {
+                        Toast.makeText(context, dateMessage, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    if (transactionStatus.trim().isEmpty()) {
+                        Toast.makeText(context, transactionStatusMessage, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    if (amount.trim().isEmpty() || !amount.matches("""^\d+(\.\d{1,2})?$""".toRegex())) {
+                        Toast.makeText(context, amountMessage, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    amount = formatFractionalPart(amount)
 
+                    val accountId = pref.getLong(Constants.PREF_SELECTED_ACCOUNT_ID_KEY, 0)
                     if (localDate != null) {
                         val newTransaction = TransactionEntity(
                             appliedIn = appliedIn,
@@ -302,8 +337,6 @@ fun TransactionScreen(
                             amount = amount.toFloatOrNull() ?: 0f,
                             accountId = accountId
                         )
-                        Log.d("TransactionScreen", "Transaction to be added: $newTransaction")
-
                         viewModel.addTransaction(newTransaction)
                         Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
@@ -324,11 +357,26 @@ fun TransactionScreen(
         ) {
             Text(
                 text = if (isEditable) stringResource(id = R.string.save) else stringResource(id = R.string.okay),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                fontFamily = Fonts.SF_SEMIBOLD_FONT
             )
         }
     }
 }
+
+fun formatFractionalPart(amount: String): String {
+    return if (amount.contains('.')) {
+        val parts = amount.split('.')
+        if (parts[1].length == 1) {
+            "${parts[0]}.${parts[1]}0"
+        } else {
+            amount
+        }
+    } else {
+        "$amount.00"
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable

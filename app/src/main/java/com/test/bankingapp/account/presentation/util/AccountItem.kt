@@ -23,10 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.test.bankingapp.R
-import com.test.bankingapp.account.domain.model.Account
+import com.test.bankingapp.room_db.domain.models.AccountEntity
 
 @Composable
-fun AccountItem(account: Account, onClick: () -> Unit) {
+fun AccountItem(account: AccountEntity, onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()
         .clickable { onClick() }) {
         Row(
@@ -50,17 +50,17 @@ fun AccountItem(account: Account, onClick: () -> Unit) {
             )
             Column {
                 Text(
-                    text = account.title,
+                    text = account.accountName,
                     color = colorResource(id = R.color.white),
                     fontSize = 16.sp
                 )
                 Text(
-                    text = account.accountNumber,
+                    text = account.accountNumber.toString(),
                     color = colorResource(id = R.color.light_gray),
                     fontSize = 14.sp
                 )
                 Text(
-                    text = account.debitCardNumber,
+                    text =  "****" + account.cardNumber.toString().takeLast(4),
                     color = colorResource(id = R.color.light_gray),
                     fontSize = 14.sp
                 )

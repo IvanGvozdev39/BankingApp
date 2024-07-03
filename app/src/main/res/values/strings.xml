@@ -29,7 +29,22 @@
     <string name="transaction_created_successfully">Transaction created successfully</string>
     <string name="okay">Okay</string>
     <string name="clear">Clear</string>
+
     <string name="enddate_cannot_be_before_startdate">End date cannot be earlier than Start date</string>
+
+    <string name="card_number_must_consist_of_8_to_19_digits">Card number must consist of 8 to 19 digits</string>
+    <string name="account_name_cannot_be_empty">Account name cannot be empty</string>
+    <string name="add_account_to_get_started">Add an account to get started</string>
+
+    <string name="applied_in_field_cannot_be_empty">Applied in field cannot be empty</string>
+    <string name="transaction_number_must_be_a_number">Transaction number cannot be empty and must be a number</string>
+    <string name="transaction_date_not_set">Transaction date not set</string>
+    <string name="transaction_status_not_set">Transaction status not set</string>
+    <string name="amount_cannot_be_empty">Amount cannot be empty and must be a legit number</string>
+
+    <string name="are_you_sure_delete_account">Are you sure you want to delete account</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     
     <!-- Content description -->
