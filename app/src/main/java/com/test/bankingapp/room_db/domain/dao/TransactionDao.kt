@@ -11,11 +11,8 @@ interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(transaction: TransactionEntity)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(transaction: TransactionEntity)
-
-    @Delete
-    suspend fun delete(transaction: TransactionEntity)
+    @Query("DELETE FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId =:accountNumber")
+    fun deleteAllTransactionsForAccount(accountNumber: Long)
 
     @Query("SELECT * FROM ${Constants.TRANSACTION_TABLE_NAME} WHERE accountId = :accountNumber ORDER BY date DESC")
     fun getTransactionsForAccount(accountNumber: Long): Flow<List<TransactionEntity>>

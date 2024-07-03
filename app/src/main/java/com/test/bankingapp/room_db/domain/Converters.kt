@@ -1,6 +1,5 @@
 package com.test.bankingapp.room_db.domain
 
-import android.util.Log
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -13,7 +12,6 @@ object Converters {
     @JvmStatic
     fun fromLocalDate(date: LocalDate?): String? {
         val dateString = date?.format(formatter)
-        Log.d("abcd123", "Converting")
         return dateString
     }
 
@@ -23,7 +21,6 @@ object Converters {
         val date = dateString?.let {
             LocalDate.parse(it, formatter)
         }
-        Log.d("abcd123", "Converting")
         return date
     }
 }

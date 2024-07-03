@@ -34,8 +34,9 @@ fun AddAccountScreen(
     var accountName by remember { mutableStateOf("") }
     var cardNumber by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val successMessage = stringResource(id = R.string.account_created_successfully)
+    val cardNumber8to19DigitsMessage = stringResource(id = R.string.card_number_must_consist_of_8_to_19_digits)
+    val nameCannotBeEmptyMessage = stringResource(id = R.string.account_name_cannot_be_empty)
 
     Box(
         modifier = Modifier
@@ -108,6 +109,15 @@ fun AddAccountScreen(
 
         Button(
             onClick = {
+                if (accountName.trim().isEmpty()) {
+                    Toast.makeText(context, nameCannotBeEmptyMessage, Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                if (!cardNumber.all { it.isDigit() } || cardNumber.length < 8 || cardNumber.length > 19) {
+                    Toast.makeText(context, cardNumber8to19DigitsMessage, Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
 
                 //13 digit account number
                 val uuid = UUID.randomUUID()

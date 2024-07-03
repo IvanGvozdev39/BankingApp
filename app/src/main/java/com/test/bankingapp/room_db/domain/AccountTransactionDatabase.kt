@@ -32,7 +32,7 @@ abstract class AccountTransactionDatabase : RoomDatabase() {
                     AccountTransactionDatabase::class.java,
                     Constants.ACCOUNT_TRANSACTION_DATABASE_NAME
                 )
-                    .fallbackToDestructiveMigration() // This will allow destructive migrations
+                    .fallbackToDestructiveMigration() //pre-prod destructive migrations
                     .build()
                 INSTANCE = instance
                 instance

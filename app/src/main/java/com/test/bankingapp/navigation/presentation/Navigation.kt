@@ -1,8 +1,6 @@
 package com.test.bankingapp.navigation.presentation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,14 +10,10 @@ import com.test.bankingapp.account.presentation.screens.AccountScreen
 import com.test.bankingapp.account.presentation.screens.AddAccountScreen
 import com.test.bankingapp.transaction.presentation.screens.AllTransactionsScreen
 import com.test.bankingapp.transaction.presentation.screens.TransactionScreen
-import com.test.bankingapp.transaction.presentation.viewmodel.TransactionViewModel
-import com.test.bankingapp.util.Constants
 
 @Composable
-fun Navigation(context: Context) {
+fun Navigation() {
     val navController = rememberNavController()
-    val viewModel: TransactionViewModel = hiltViewModel()
-    val pref = context.getSharedPreferences(Constants.SHARED_PREF_S, Context.MODE_PRIVATE)
 
     NavHost(navController = navController, startDestination = Screen.AccountScreen.route) {
         composable(route = Screen.AccountScreen.route) {

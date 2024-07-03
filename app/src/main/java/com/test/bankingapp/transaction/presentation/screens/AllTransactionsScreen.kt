@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.test.bankingapp.R
 import com.test.bankingapp.room_db.domain.models.TransactionEntity
 import com.test.bankingapp.transaction.presentation.viewmodel.AllTransactionsViewModel
+import com.test.bankingapp.util.Fonts
 import com.test.bankingapp.util.composable_items.RoundedLazyColumn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -114,7 +115,8 @@ fun AllTransactionsScreen(
                 Text(
                     text = stringResource(id = R.string.all_transactions),
                     color = colorResource(id = R.color.white),
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    fontFamily = Fonts.SF_SEMIBOLD_FONT
                 )
                 IconButton(onClick = {
                     coroutineScope.launch {
